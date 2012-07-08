@@ -155,7 +155,7 @@ module Suitcase
       params["maxRate"] = params[:max_rate]
 
       # Clean up params
-      params.delete_if { |k,v| v.blank? || [:results, :destination_id, :location].include? k }
+      params.delete_if { |k,v| v.blank? || [:results, :destination_id, :location].include?(k) }
 
       if Configuration.cache? and Configuration.cache.cached?(:list, params)
         parsed = Configuration.cache.get_query(:list, params)
