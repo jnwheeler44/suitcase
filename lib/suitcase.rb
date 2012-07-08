@@ -1,4 +1,4 @@
-require "patron"
+require "httparty"
 require "json"
 require "net/http"
 require "digest/md5"

@@ -26,5 +26,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "pry"
 
   s.add_runtime_dependency "json"
-  s.add_runtime_dependency "patron"
+  s.add_runtime_dependency "httparty"
 end

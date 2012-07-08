@@ -137,23 +137,25 @@ module Suitcase
     # Returns an Array of Hotels.
     def self.find_by_info(info)
       params = info.dup
-      params["numberOfResults"] = params[:results] ? params[:results] : 10
-      params.delete(:results)
+      params["numberOfResults"] = params[:results] || 10
       if params[:destination_id]
         params["destinationId"] = params[:destination_id]
-        params.delete(:destination_id)
       elsif params[:location]
         params["destinationString"] = params[:location]
-        params.delete(:location)
       end
 
-      amenities = params[:amenities] ? params[:amenities].map {|amenity| 
-        AMENITIES[amenity] 
-      }.join(",") : nil
-      params[:amenities] = amenities if amenities
+      if params[:amenities].present?
+        params[:amenities].map! { |amenity|
+          AMENITIES[amenity]
+        }.join(",")
+      end
 
-      params["minRate"] = params[:min_rate] if params[:min_rate]
-      params["maxRate"] = params[:max_rate] if params[:max_rate]
+      params["propertyName"] = params[:name]
+      params["minRate"] = params[:min_rate]
+      params["maxRate"] = params[:max_rate]
+
+      # Clean up params
+      params.delete_if { |k,v| v.blank? || [:results, :destination_id, :location].include? k }
 
       if Configuration.cache? and Configuration.cache.cached?(:list, params)
         parsed = Configuration.cache.get_query(:list, params)
